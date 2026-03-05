@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './Profile.css';
-import api from '../../api';
-
 import { showToast } from '../Toast/Toast';
 
 const Profile = ({ user }) => {
