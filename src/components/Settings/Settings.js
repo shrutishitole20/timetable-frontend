@@ -3,7 +3,7 @@ import './Settings.css';
 import api from '../../api';
 import { showToast } from '../Toast/Toast';
 
-const Settings = () => {
+const Settings = ({ isAdmin }) => {
     const [settings, setSettings] = useState({
         lecture_duration: 1,
         break_times: '13:00-14:00'
@@ -68,6 +68,7 @@ const Settings = () => {
                         <select
                             className="settings-select"
                             value={settings.lecture_duration}
+                            disabled={!isAdmin}
                             onChange={(e) => setSettings({ ...settings, lecture_duration: parseInt(e.target.value) })}
                         >
                             <option value="1">1 Hour</option>
@@ -87,19 +88,22 @@ const Settings = () => {
                             className="settings-input"
                             placeholder="e.g. 13:00-14:00"
                             value={settings.break_times}
+                            disabled={!isAdmin}
                             onChange={(e) => setSettings({ ...settings, break_times: e.target.value })}
                         />
                     </div>
                     <small className="help-text">Format: HH:MM-HH:MM (24-hour clock)</small>
                 </div>
 
-                <button
-                    className="btn-save-settings"
-                    onClick={handleSave}
-                    disabled={saving}
-                >
-                    {saving ? 'Saving...' : '💾 Save All Changes'}
-                </button>
+                {isAdmin && (
+                    <button
+                        className="btn-save-settings"
+                        onClick={handleSave}
+                        disabled={saving}
+                    >
+                        {saving ? 'Saving...' : '💾 Save All Changes'}
+                    </button>
+                )}
             </div>
         </div>
     );

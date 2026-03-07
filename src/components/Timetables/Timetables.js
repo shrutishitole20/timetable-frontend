@@ -3,7 +3,7 @@ import './Timetables.css';
 import api from '../../api';
 import { showToast } from '../Toast/Toast';
 
-const Timetables = () => {
+const Timetables = ({ isAdmin }) => {
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState('');
     const [timetableSlots, setTimetableSlots] = useState([]);
@@ -111,13 +111,15 @@ const Timetables = () => {
 
                 <div className="control-btns">
                     <button className="btn-print" onClick={handlePrint}>🖨️ Export PDF</button>
-                    <button
-                        className="btn-generate"
-                        onClick={handleGenerate}
-                        disabled={generating}
-                    >
-                        {generating ? '🛠️ Processing...' : '⚡ Generate Schedule'}
-                    </button>
+                    {isAdmin && (
+                        <button
+                            className="btn-generate"
+                            onClick={handleGenerate}
+                            disabled={generating}
+                        >
+                            {generating ? '🛠️ Processing...' : '⚡ Generate Schedule'}
+                        </button>
+                    )}
                 </div>
             </div>
 

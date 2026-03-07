@@ -3,7 +3,7 @@ import './Courses.css';
 import api from '../../api';
 import { showToast } from '../Toast/Toast';
 
-const Courses = () => {
+const Courses = ({ isAdmin }) => {
     const [courseData, setCourseData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -99,37 +99,39 @@ const Courses = () => {
 
             <div className="courses-content">
                 {/* Left Side: Form */}
-                <div className="course-form-section">
-                    <h3 className="form-title">{selectedId ? 'Edit Course' : 'Add New Course'}</h3>
-                    <div className="form-row">
-                        <label>Course Code:</label>
-                        <input name="code" value={formData.code} onChange={handleInputChange} type="text" placeholder="e.g. CS2025" />
-                    </div>
-                    <div className="form-row">
-                        <label>Course Name:</label>
-                        <input name="name" value={formData.name} onChange={handleInputChange} type="text" placeholder="e.g. B.Tech CS" />
-                    </div>
-                    <div className="form-row">
-                        <label>Department:</label>
-                        <input name="department" value={formData.department} onChange={handleInputChange} type="text" placeholder="e.g. Engineering" />
-                    </div>
-                    <div className="form-row">
-                        <label>Year / Duration:</label>
-                        <input name="year" value={formData.year} onChange={handleInputChange} type="text" placeholder="e.g. 2nd Year" />
-                    </div>
+                {isAdmin && (
+                    <div className="course-form-section">
+                        <h3 className="form-title">{selectedId ? 'Edit Course' : 'Add New Course'}</h3>
+                        <div className="form-row">
+                            <label>Course Code:</label>
+                            <input name="code" value={formData.code} onChange={handleInputChange} type="text" placeholder="e.g. CS2025" />
+                        </div>
+                        <div className="form-row">
+                            <label>Course Name:</label>
+                            <input name="name" value={formData.name} onChange={handleInputChange} type="text" placeholder="e.g. B.Tech CS" />
+                        </div>
+                        <div className="form-row">
+                            <label>Department:</label>
+                            <input name="department" value={formData.department} onChange={handleInputChange} type="text" placeholder="e.g. Engineering" />
+                        </div>
+                        <div className="form-row">
+                            <label>Year / Duration:</label>
+                            <input name="year" value={formData.year} onChange={handleInputChange} type="text" placeholder="e.g. 2nd Year" />
+                        </div>
 
-                    <div className="buttons-group">
-                        <button className="btn-add" onClick={handleAddOrUpdate}>
-                            {selectedId ? '💾 UPDATE COURSE' : '➕ ADD COURSE'}
-                        </button>
-                        {selectedId && (
-                            <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>✖ CANCEL</button>
-                        )}
+                        <div className="buttons-group">
+                            <button className="btn-add" onClick={handleAddOrUpdate}>
+                                {selectedId ? '💾 UPDATE COURSE' : '➕ ADD COURSE'}
+                            </button>
+                            {selectedId && (
+                                <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>✖ CANCEL</button>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Right Side: Table */}
-                <div className="course-table-section">
+                <div className="course-table-section" style={{ width: isAdmin ? undefined : '100%' }}>
                     <div className="table-controls">
                         <div className="search-box">
                             <i>🔍</i>
@@ -158,7 +160,7 @@ const Courses = () => {
                                         <th>Course Name</th>
                                         <th>Department</th>
                                         <th>Year</th>
-                                        <th>Actions</th>
+                                        {isAdmin && <th>Actions</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -170,16 +172,18 @@ const Courses = () => {
                                                 <td><strong>{course.name}</strong></td>
                                                 <td>{course.department}</td>
                                                 <td>{course.year}</td>
-                                                <td>
-                                                    <div className="action-btns">
-                                                        <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(course)}>✏️</button>
-                                                        <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(course.id)}>🗑️</button>
-                                                    </div>
-                                                </td>
+                                                {isAdmin && (
+                                                    <td>
+                                                        <div className="action-btns">
+                                                            <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(course)}>✏️</button>
+                                                            <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(course.id)}>🗑️</button>
+                                                        </div>
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="6" className="empty-row">No courses found</td></tr>
+                                        <tr><td colSpan={isAdmin ? "6" : "5"} className="empty-row">No courses found</td></tr>
                                     )}
                                 </tbody>
                             </table>

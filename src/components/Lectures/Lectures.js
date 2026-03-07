@@ -3,7 +3,7 @@ import './Lectures.css';
 import api from '../../api';
 import { showToast } from '../Toast/Toast';
 
-const Lectures = () => {
+const Lectures = ({ isAdmin }) => {
     const [lectureData, setLectureData] = useState([]);
     const [tutors, setTutors] = useState([]);
     const [rooms, setRooms] = useState([]);
@@ -166,88 +166,90 @@ const Lectures = () => {
 
             <div className="lectures-content">
                 {/* Left Side: Form */}
-                <div className="lecture-form-section">
-                    <h3 className="form-title">{selectedId ? 'Edit Lecture' : 'Add New Lecture'}</h3>
-                    <div className="form-row">
-                        <label>Unit Code:</label>
-                        <input
-                            name="unit_code"
-                            value={formData.unit_code}
-                            onChange={handleInputChange}
-                            type="text"
-                            placeholder="e.g. CS101"
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label>Unit Name:</label>
-                        <input
-                            name="unit_name"
-                            value={formData.unit_name}
-                            onChange={handleInputChange}
-                            type="text"
-                            placeholder="e.g. Intro to CS"
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label>Course Name:</label>
-                        <select name="course" value={formData.course} onChange={handleInputChange}>
-                            <option value="">Select Course</option>
-                            {courses.map(c => (
-                                <option key={c.id} value={c.id}>{c.name}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-row">
-                        <label>Duration (Hours):</label>
-                        <input
-                            name="duration"
-                            value={formData.duration}
-                            onChange={handleInputChange}
-                            type="number"
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label>Tutor:</label>
-                        <select name="tutor" value={formData.tutor} onChange={handleInputChange}>
-                            <option value="">Select Tutor</option>
-                            {tutors.map(t => (
-                                <option key={t.id} value={t.id}>{t.name}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-row">
-                        <label>No. of Students:</label>
-                        <input
-                            name="students"
-                            value={formData.students}
-                            onChange={handleInputChange}
-                            type="number"
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label>Room:</label>
-                        <select name="room" value={formData.room} onChange={handleInputChange}>
-                            <option value="">Select Room</option>
-                            {rooms.map(r => (
-                                <option key={r.id} value={r.id}>{r.room_no} ({r.capacity} seats)</option>
-                            ))}
-                        </select>
-                    </div>
+                {isAdmin && (
+                    <div className="lecture-form-section">
+                        <h3 className="form-title">{selectedId ? 'Edit Lecture' : 'Add New Lecture'}</h3>
+                        <div className="form-row">
+                            <label>Unit Code:</label>
+                            <input
+                                name="unit_code"
+                                value={formData.unit_code}
+                                onChange={handleInputChange}
+                                type="text"
+                                placeholder="e.g. CS101"
+                            />
+                        </div>
+                        <div className="form-row">
+                            <label>Unit Name:</label>
+                            <input
+                                name="unit_name"
+                                value={formData.unit_name}
+                                onChange={handleInputChange}
+                                type="text"
+                                placeholder="e.g. Intro to CS"
+                            />
+                        </div>
+                        <div className="form-row">
+                            <label>Course Name:</label>
+                            <select name="course" value={formData.course} onChange={handleInputChange}>
+                                <option value="">Select Course</option>
+                                {courses.map(c => (
+                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-row">
+                            <label>Duration (Hours):</label>
+                            <input
+                                name="duration"
+                                value={formData.duration}
+                                onChange={handleInputChange}
+                                type="number"
+                            />
+                        </div>
+                        <div className="form-row">
+                            <label>Tutor:</label>
+                            <select name="tutor" value={formData.tutor} onChange={handleInputChange}>
+                                <option value="">Select Tutor</option>
+                                {tutors.map(t => (
+                                    <option key={t.id} value={t.id}>{t.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-row">
+                            <label>No. of Students:</label>
+                            <input
+                                name="students"
+                                value={formData.students}
+                                onChange={handleInputChange}
+                                type="number"
+                            />
+                        </div>
+                        <div className="form-row">
+                            <label>Room:</label>
+                            <select name="room" value={formData.room} onChange={handleInputChange}>
+                                <option value="">Select Room</option>
+                                {rooms.map(r => (
+                                    <option key={r.id} value={r.id}>{r.room_no} ({r.capacity} seats)</option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <div className="buttons-group">
-                        <button className="btn-add" onClick={handleAddOrUpdate}>
-                            {selectedId ? '💾 Update' : '➕ Add Lecture'}
-                        </button>
-                        {selectedId && (
-                            <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>
-                                ✖ Cancel
+                        <div className="buttons-group">
+                            <button className="btn-add" onClick={handleAddOrUpdate}>
+                                {selectedId ? '💾 Update' : '➕ Add Lecture'}
                             </button>
-                        )}
+                            {selectedId && (
+                                <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>
+                                    ✖ Cancel
+                                </button>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Right Side: Table */}
-                <div className="lecture-table-section">
+                <div className="lecture-table-section" style={{ width: isAdmin ? undefined : '100%' }}>
                     <div className="table-controls">
                         <div className="search-box">
                             <i>🔍</i>
@@ -292,7 +294,7 @@ const Lectures = () => {
                                         <th onClick={() => requestSort('room_no')} style={{ cursor: 'pointer' }}>
                                             Room {sortConfig.key === 'room_no' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                                         </th>
-                                        <th>Actions</th>
+                                        {isAdmin && <th>Actions</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -306,16 +308,18 @@ const Lectures = () => {
                                                 <td>{item.duration}h</td>
                                                 <td>{item.tutor_name}</td>
                                                 <td>{item.room_no}</td>
-                                                <td>
-                                                    <div className="action-btns">
-                                                        <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(item)}>✏️</button>
-                                                        <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(item.id)}>🗑️</button>
-                                                    </div>
-                                                </td>
+                                                {isAdmin && (
+                                                    <td>
+                                                        <div className="action-btns">
+                                                            <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(item)}>✏️</button>
+                                                            <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(item.id)}>🗑️</button>
+                                                        </div>
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="7" className="empty-row">No matching lectures found</td></tr>
+                                        <tr><td colSpan={isAdmin ? "8" : "7"} className="empty-row">No matching lectures found</td></tr>
                                     )}
                                 </tbody>
                             </table>

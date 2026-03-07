@@ -3,7 +3,7 @@ import './Tutors.css';
 import api from '../../api';
 import { showToast } from '../Toast/Toast';
 
-const Tutors = () => {
+const Tutors = ({ isAdmin }) => {
     const [tutorData, setTutorData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -97,33 +97,35 @@ const Tutors = () => {
 
             <div className="tutors-content">
                 {/* Left: Form */}
-                <div className="tutor-form-section">
-                    <h3 className="form-title">{selectedId ? 'Edit Tutor' : 'Add New Tutor'}</h3>
-                    <div className="form-row">
-                        <label>Name:</label>
-                        <input name="name" value={formData.name} onChange={handleInputChange} type="text" placeholder="Full Name" />
-                    </div>
-                    <div className="form-row">
-                        <label>Phone no. :</label>
-                        <input name="phone" value={formData.phone} onChange={handleInputChange} type="text" placeholder="+1234567890" />
-                    </div>
-                    <div className="form-row">
-                        <label>Unit Code:</label>
-                        <input name="unit_code" value={formData.unit_code} onChange={handleInputChange} type="text" placeholder="e.g. CS101" />
-                    </div>
+                {isAdmin && (
+                    <div className="tutor-form-section">
+                        <h3 className="form-title">{selectedId ? 'Edit Tutor' : 'Add New Tutor'}</h3>
+                        <div className="form-row">
+                            <label>Name:</label>
+                            <input name="name" value={formData.name} onChange={handleInputChange} type="text" placeholder="Full Name" />
+                        </div>
+                        <div className="form-row">
+                            <label>Phone no. :</label>
+                            <input name="phone" value={formData.phone} onChange={handleInputChange} type="text" placeholder="+1234567890" />
+                        </div>
+                        <div className="form-row">
+                            <label>Unit Code:</label>
+                            <input name="unit_code" value={formData.unit_code} onChange={handleInputChange} type="text" placeholder="e.g. CS101" />
+                        </div>
 
-                    <div className="buttons-group">
-                        <button className="btn-add" onClick={handleAddOrUpdate}>
-                            {selectedId ? '💾 UPDATE' : '➕ ADD TUTOR'}
-                        </button>
-                        {selectedId && (
-                            <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>✖ CANCEL</button>
-                        )}
+                        <div className="buttons-group">
+                            <button className="btn-add" onClick={handleAddOrUpdate}>
+                                {selectedId ? '💾 UPDATE' : '➕ ADD TUTOR'}
+                            </button>
+                            {selectedId && (
+                                <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>✖ CANCEL</button>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Right: Table */}
-                <div className="tutor-table-section">
+                <div className="tutor-table-section" style={{ width: isAdmin ? undefined : '100%' }}>
                     <div className="table-controls">
                         <div className="search-box">
                             <i>🔍</i>
@@ -151,7 +153,7 @@ const Tutors = () => {
                                         <th>Name</th>
                                         <th>Phone</th>
                                         <th>Unit Code</th>
-                                        <th>Actions</th>
+                                        {isAdmin && <th>Actions</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -162,16 +164,18 @@ const Tutors = () => {
                                                 <td><strong>{tutor.name}</strong></td>
                                                 <td>{tutor.phone}</td>
                                                 <td><span className="code-badge">{tutor.unit_code || 'N/A'}</span></td>
-                                                <td>
-                                                    <div className="action-btns">
-                                                        <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(tutor)}>✏️</button>
-                                                        <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(tutor.id)}>🗑️</button>
-                                                    </div>
-                                                </td>
+                                                {isAdmin && (
+                                                    <td>
+                                                        <div className="action-btns">
+                                                            <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(tutor)}>✏️</button>
+                                                            <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(tutor.id)}>🗑️</button>
+                                                        </div>
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="5" className="empty-row">No tutors found</td></tr>
+                                        <tr><td colSpan={isAdmin ? "5" : "4"} className="empty-row">No tutors found</td></tr>
                                     )}
                                 </tbody>
                             </table>

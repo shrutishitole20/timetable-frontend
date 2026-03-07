@@ -3,7 +3,7 @@ import './Rooms.css';
 import api from '../../api';
 import { showToast } from '../Toast/Toast';
 
-const Rooms = () => {
+const Rooms = ({ isAdmin }) => {
     const [roomData, setRoomData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -96,33 +96,35 @@ const Rooms = () => {
 
             <div className="rooms-content">
                 {/* Left Side: Form */}
-                <div className="room-form-section">
-                    <h3 className="form-title">{selectedId ? 'Edit Room' : 'Add New Room'}</h3>
-                    <div className="form-row">
-                        <label>Room no. :</label>
-                        <input name="room_no" value={formData.room_no} onChange={handleInputChange} type="text" placeholder="e.g. R101" />
-                    </div>
-                    <div className="form-row">
-                        <label>Capacity:</label>
-                        <input name="capacity" value={formData.capacity} onChange={handleInputChange} type="number" placeholder="e.g. 50" />
-                    </div>
-                    <div className="form-row">
-                        <label>Room Name (Optional):</label>
-                        <input name="name" value={formData.name} onChange={handleInputChange} type="text" placeholder="e.g. Lab 1" />
-                    </div>
+                {isAdmin && (
+                    <div className="room-form-section">
+                        <h3 className="form-title">{selectedId ? 'Edit Room' : 'Add New Room'}</h3>
+                        <div className="form-row">
+                            <label>Room no. :</label>
+                            <input name="room_no" value={formData.room_no} onChange={handleInputChange} type="text" placeholder="e.g. R101" />
+                        </div>
+                        <div className="form-row">
+                            <label>Capacity:</label>
+                            <input name="capacity" value={formData.capacity} onChange={handleInputChange} type="number" placeholder="e.g. 50" />
+                        </div>
+                        <div className="form-row">
+                            <label>Room Name (Optional):</label>
+                            <input name="name" value={formData.name} onChange={handleInputChange} type="text" placeholder="e.g. Lab 1" />
+                        </div>
 
-                    <div className="buttons-group">
-                        <button className="btn-add" onClick={handleAddOrUpdate}>
-                            {selectedId ? '💾 UPDATE ROOM' : '➕ ADD ROOM'}
-                        </button>
-                        {selectedId && (
-                            <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>✖ CANCEL</button>
-                        )}
+                        <div className="buttons-group">
+                            <button className="btn-add" onClick={handleAddOrUpdate}>
+                                {selectedId ? '💾 UPDATE ROOM' : '➕ ADD ROOM'}
+                            </button>
+                            {selectedId && (
+                                <button className="btn-action" onClick={resetForm} style={{ backgroundColor: '#999' }}>✖ CANCEL</button>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Right Side: Table */}
-                <div className="room-table-section">
+                <div className="room-table-section" style={{ width: isAdmin ? undefined : '100%' }}>
                     <div className="table-controls">
                         <div className="search-box">
                             <i>🔍</i>
@@ -150,7 +152,7 @@ const Rooms = () => {
                                         <th>Room No</th>
                                         <th>Capacity</th>
                                         <th>Room Name</th>
-                                        <th>Actions</th>
+                                        {isAdmin && <th>Actions</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -161,16 +163,18 @@ const Rooms = () => {
                                                 <td><span className="code-badge">{room.room_no}</span></td>
                                                 <td><strong>{room.capacity}</strong> seats</td>
                                                 <td>{room.name || '---'}</td>
-                                                <td>
-                                                    <div className="action-btns">
-                                                        <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(room)}>✏️</button>
-                                                        <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(room.id)}>🗑️</button>
-                                                    </div>
-                                                </td>
+                                                {isAdmin && (
+                                                    <td>
+                                                        <div className="action-btns">
+                                                            <button className="btn-table-edit" title="Edit" onClick={() => handleEdit(room)}>✏️</button>
+                                                            <button className="btn-table-delete" title="Delete" onClick={() => handleDelete(room.id)}>🗑️</button>
+                                                        </div>
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr><td colSpan="5" className="empty-row">No rooms found</td></tr>
+                                        <tr><td colSpan={isAdmin ? "5" : "4"} className="empty-row">No rooms found</td></tr>
                                     )}
                                 </tbody>
                             </table>

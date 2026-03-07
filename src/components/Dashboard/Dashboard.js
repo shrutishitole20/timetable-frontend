@@ -52,14 +52,16 @@ const Dashboard = ({ setPage, user }) => {
         }
     };
 
+    const isAdmin = user === 'admin' || user === 'Administrator';
+
     const renderContent = () => {
         switch (activeTab) {
-            case 'Lectures': return <Lectures />;
-            case 'Tutors': return <Tutors />;
-            case 'Rooms': return <Rooms />;
-            case 'Courses': return <Courses />;
-            case 'Timetables': return <Timetables />;
-            case 'Settings': return <Settings />;
+            case 'Lectures': return <Lectures isAdmin={isAdmin} />;
+            case 'Tutors': return <Tutors isAdmin={isAdmin} />;
+            case 'Rooms': return <Rooms isAdmin={isAdmin} />;
+            case 'Courses': return <Courses isAdmin={isAdmin} />;
+            case 'Timetables': return <Timetables isAdmin={isAdmin} />;
+            case 'Settings': return <Settings isAdmin={isAdmin} />;
             case 'Profile': return <Profile user={user} />;
             case 'Dashboard':
             default:
