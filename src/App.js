@@ -8,7 +8,8 @@ function App() {
   const [page, setPage] = useState('auth');
   const [user, setUser] = useState(null);
 
-  const handleLoginSuccess = (userData) => {
+  const handleLoginSuccess = (userData) => 
+  {
     setUser(userData);
     setPage('dashboard');
   };
